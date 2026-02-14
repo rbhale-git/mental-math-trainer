@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MentalMath — Mental Math Training App
 
-## Getting Started
+Practice and improve your mental arithmetic skills with timed problems across 5 operations and 4 difficulty levels.
 
-First, run the development server:
+## Tech Stack
+
+- **Next.js 16** (App Router, TypeScript)
+- **Tailwind CSS v4**
+- **Supabase** (Auth + PostgreSQL)
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) 20.9 or later
+- A free [Supabase](https://supabase.com/) account
+
+## Setup
+
+### 1. Clone and install
+
+```bash
+git clone <your-repo-url>
+cd mental-math
+npm install
+```
+
+### 2. Create a Supabase project
+
+1. Go to [supabase.com/dashboard](https://supabase.com/dashboard)
+2. Click **New Project** and give it a name
+3. Wait for the project to finish provisioning
+
+### 3. Run the database migration
+
+1. In your Supabase dashboard, go to **SQL Editor**
+2. Click **New Query**
+3. Copy the contents of `supabase/migrations/001_initial_schema.sql` and paste it
+4. Click **Run** — this creates the tables, indexes, and security policies
+
+### 4. Configure environment variables
+
+1. In your Supabase dashboard, go to **Settings → API**
+2. Copy the **Project URL** and **anon public** key
+3. Edit the `.env.local` file in the project root:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+### 5. Configure Supabase Auth (optional but recommended)
+
+1. In Supabase dashboard, go to **Authentication → URL Configuration**
+2. Set **Site URL** to `http://localhost:3000`
+3. Add `http://localhost:3000/auth/callback` to **Redirect URLs**
+
+### 6. Run the dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+mental-math/
+├── proxy.ts                        # Route protection (Next.js 16 proxy)
+├── supabase/migrations/            # Database schema SQL
+├── src/
+│   ├── app/
+│   │   ├── page.tsx                # Landing page
+│   │   ├── login/page.tsx          # Login page
+│   │   ├── signup/page.tsx         # Signup page
+│   │   ├── auth/callback/route.ts  # Supabase auth callback
+│   │   ├── dashboard/page.tsx      # Stats dashboard
+│   │   └── practice/page.tsx       # Practice mode
+│   ├── components/                 # Reusable UI components
+│   ├── hooks/                      # Custom React hooks
+│   └── lib/
+│       ├── supabase/               # Supabase client helpers
+│       ├── problems.ts             # Problem generation engine
+│       └── types.ts                # TypeScript type definitions
+```
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- **5 Operations**: Addition, subtraction, multiplication, division, percentages
+- **4 Difficulty Levels**: Easy, medium, hard, expert
+- **Unlimited Practice**: Solve problems at your own pace
+- **Real-time Stats**: Track accuracy and speed per operation
+- **Dashboard**: See your overall performance and per-operation breakdown
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment (Vercel)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Push your code to GitHub
+2. Go to [vercel.com](https://vercel.com) and import your repository
+3. Add the environment variables (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`)
+4. Deploy — Vercel auto-detects Next.js
+5. Update your Supabase **Site URL** and **Redirect URLs** to your production domain
