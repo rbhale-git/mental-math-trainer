@@ -10,6 +10,13 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Custom palette */
+  --color-primary: #6CA651;
+  --color-primary-dark: #5A8B43;
+  --color-accent: #BBCB2E;
+  --color-accent-dark: #839705;
+  --color-olive: #6B7445;
 }
 
 body {

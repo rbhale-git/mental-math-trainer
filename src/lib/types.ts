@@ -61,6 +61,36 @@ export interface PerformanceMetric {
   last_practiced: string;
 }
 
+// Overall rating buckets for assessment results
+export type OverallRating = "Beginner" | "Intermediate" | "Advanced" | "Expert";
+
+// A completed assessment saved to the database
+export interface AssessmentResult {
+  id: string;
+  user_id: string;
+  add_level: Difficulty;
+  subtract_level: Difficulty;
+  multiply_level: Difficulty;
+  divide_level: Difficulty;
+  percentage_level: Difficulty;
+  overall_rating: OverallRating;
+  total_questions: number;
+  total_correct: number;
+  completed_at: string;
+}
+
+// Local state for the adaptive assessment in progress
+export interface AssessmentState {
+  // Per-operation tracking: current difficulty and questions answered
+  operationProgress: Record<Operation, { currentDifficulty: Difficulty; questionsAnswered: number; correctCount: number }>;
+  // Ordered list of questions to present (interleaved operations)
+  questionQueue: Operation[];
+  // Current position in the queue
+  currentIndex: number;
+  // Whether the assessment is complete
+  isComplete: boolean;
+}
+
 // Shape of the practice page's local state
 export interface PracticeState {
   // Config

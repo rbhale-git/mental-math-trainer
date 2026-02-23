@@ -37,7 +37,7 @@ export async function updateSession(request: NextRequest) {
 
   // If user is NOT logged in and trying to access a protected route,
   // redirect them to the login page
-  const protectedPaths = ["/dashboard", "/practice"];
+  const protectedPaths = ["/dashboard", "/practice", "/assessment"];
   const isProtected = protectedPaths.some((path) =>
     request.nextUrl.pathname.startsWith(path)
   );

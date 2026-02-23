@@ -63,9 +63,9 @@ export default function PerformanceChart({ metrics }: PerformanceChartProps) {
               <div
                 className={`h-3 rounded-full transition-all ${
                   data.accuracy >= 80
-                    ? "bg-green-500"
+                    ? "bg-primary"
                     : data.accuracy >= 50
-                      ? "bg-yellow-500"
+                      ? "bg-accent"
                       : "bg-red-500"
                 }`}
                 style={{ width: `${Math.max(2, Math.round(data.accuracy))}%` }}

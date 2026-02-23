@@ -31,7 +31,9 @@ export default function ProblemDisplay({
     setInput("");
     setFeedback(null);
     startTimeRef.current = Date.now();
-    inputRef.current?.focus();
+    // Delay focus to ensure the input is enabled and rendered after feedback clears
+    const timer = setTimeout(() => inputRef.current?.focus(), 10);
+    return () => clearTimeout(timer);
   }, [problem]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -81,13 +83,13 @@ export default function ProblemDisplay({
           onChange={(e) => setInput(e.target.value)}
           placeholder="Your answer"
           disabled={!!feedback}
-          className="w-full text-center text-2xl px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white text-gray-900 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          className="w-full text-center text-2xl px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-white text-gray-900 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           autoComplete="off"
         />
         {!feedback && (
           <button
             type="submit"
-            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+            className="w-full py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition-colors"
           >
             Submit (Enter)
           </button>

@@ -60,7 +60,7 @@ export default function PracticeConfig({
               onClick={() => toggleOperation(value)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 selectedOperations.includes(value)
-                  ? "bg-blue-600 text-white"
+                  ? "bg-primary text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
@@ -80,7 +80,7 @@ export default function PracticeConfig({
               onClick={() => onDifficultyChange(value)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 difficulty === value
-                  ? "bg-blue-600 text-white"
+                  ? "bg-primary text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
@@ -93,7 +93,7 @@ export default function PracticeConfig({
       {/* Start button */}
       <button
         onClick={onStart}
-        className="w-full py-3 bg-green-600 text-white text-lg font-semibold rounded-lg hover:bg-green-700 transition-colors"
+        className="w-full py-3 bg-accent-dark text-white text-lg font-semibold rounded-lg hover:bg-olive transition-colors"
       >
         Start Practice
       </button>

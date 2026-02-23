@@ -7,7 +7,7 @@ export default function HomePage() {
       <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-4">
         Train Your
         <br />
-        <span className="text-blue-600">Mental Math</span>
+        <span className="text-primary">Mental Math</span>
       </h1>
       <p className="text-lg text-gray-500 max-w-md mb-8">
         Practice addition, subtraction, multiplication, division, and
@@ -18,7 +18,7 @@ export default function HomePage() {
       <div className="flex gap-4">
         <Link
           href="/signup"
-          className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+          className="px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition-colors"
         >
           Get Started
         </Link>

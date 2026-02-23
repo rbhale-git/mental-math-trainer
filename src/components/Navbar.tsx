@@ -45,6 +45,12 @@ export default function Navbar() {
               >
                 Practice
               </Link>
+              <Link
+                href="/assessment"
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                Assessment
+              </Link>
               <button
                 onClick={handleLogout}
                 className="text-sm px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
@@ -62,7 +68,7 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/signup"
-                className="text-sm px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="text-sm px-3 py-1.5 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
               >
                 Sign Up
               </Link>
