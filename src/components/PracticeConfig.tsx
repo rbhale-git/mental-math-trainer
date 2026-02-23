@@ -1,8 +1,8 @@
 "use client";
 
 // Configuration panel for practice mode.
-// Lets the user pick which operations to practice and the difficulty level.
-import type { Difficulty, Operation } from "@/lib/types";
+// Lets the user pick operations, difficulty, and game mode.
+import type { Difficulty, Operation, PracticeMode } from "@/lib/types";
 
 const ALL_OPERATIONS: {
   value: Operation;
@@ -28,25 +28,110 @@ const ALL_DIFFICULTIES: {
   { value: "expert", label: "Expert", hint: "Challenge" },
 ];
 
+const MODE_OPTIONS: {
+  value: PracticeMode;
+  label: string;
+  description: string;
+  icon: string;
+}[] = [
+  {
+    value: "unlimited",
+    label: "Unlimited",
+    description: "Practice continuously at your own pace.",
+    icon: "infinity",
+  },
+  {
+    value: "timed",
+    label: "Timed",
+    description: "Answer as many as possible before time runs out.",
+    icon: "clock",
+  },
+  {
+    value: "lives",
+    label: "Lives",
+    description: "Stay accurate. Session ends when all lives are gone.",
+    icon: "heart",
+  },
+];
+
+const TIMED_OPTIONS = [60, 120, 180];
+const LIVES_OPTIONS = [3, 5, 7];
+
 interface PracticeConfigProps {
   selectedOperations: Operation[];
   difficulty: Difficulty;
+  mode: PracticeMode;
+  timedDurationSec: number;
+  livesCount: number;
   onOperationsChange: (ops: Operation[]) => void;
   onDifficultyChange: (d: Difficulty) => void;
+  onModeChange: (mode: PracticeMode) => void;
+  onTimedDurationChange: (seconds: number) => void;
+  onLivesCountChange: (lives: number) => void;
   onStart: () => void;
+}
+
+function ModeIcon({ icon }: { icon: string }) {
+  if (icon === "clock") {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        className="h-4 w-4"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
+  if (icon === "heart") {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="h-4 w-4"
+        aria-hidden="true"
+      >
+        <path d="M12 21s-6.7-4.3-9.2-8.3C.8 9.5 2.1 6 5.5 5.1c2-.5 4 .3 5.2 2 1.2-1.7 3.2-2.5 5.2-2 3.4.9 4.7 4.4 2.7 7.6C18.7 16.7 12 21 12 21z" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      className="h-4 w-4"
+      aria-hidden="true"
+    >
+      <path d="M4 12h16" strokeLinecap="round" />
+      <path d="M8 8l-4 4 4 4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M16 8l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
 }
 
 export default function PracticeConfig({
   selectedOperations,
   difficulty,
+  mode,
+  timedDurationSec,
+  livesCount,
   onOperationsChange,
   onDifficultyChange,
+  onModeChange,
+  onTimedDurationChange,
+  onLivesCountChange,
   onStart,
 }: PracticeConfigProps) {
-  // Toggle an operation on/off
   const toggleOperation = (op: Operation) => {
     if (selectedOperations.includes(op)) {
-      // Don't allow deselecting the last one
       if (selectedOperations.length > 1) {
         onOperationsChange(selectedOperations.filter((o) => o !== op));
       }
@@ -54,6 +139,13 @@ export default function PracticeConfig({
       onOperationsChange([...selectedOperations, op]);
     }
   };
+
+  const startLabel =
+    mode === "timed"
+      ? `Start ${Math.floor(timedDurationSec / 60)}-Minute Challenge`
+      : mode === "lives"
+        ? `Start ${livesCount}-Life Run`
+        : "Start Practice";
 
   return (
     <section className="rounded-2xl border border-primary/20 bg-white/85 p-6 shadow-sm backdrop-blur-sm md:p-8">
@@ -67,7 +159,96 @@ export default function PracticeConfig({
       </div>
 
       <div className="space-y-8">
-        {/* Operation selection */}
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold text-gray-900">Game Mode</h2>
+
+          <div className="grid gap-3 md:grid-cols-3">
+            {MODE_OPTIONS.map(({ value, label, description, icon }) => {
+              const isSelected = mode === value;
+
+              return (
+                <button
+                  key={value}
+                  onClick={() => onModeChange(value)}
+                  className={`rounded-xl border p-4 text-left transition-all ${
+                    isSelected
+                      ? "border-primary bg-primary/10 shadow-sm"
+                      : "border-gray-200 bg-white hover:border-primary/40 hover:bg-primary/5"
+                  }`}
+                >
+                  <span
+                    className={`mb-2 inline-flex h-8 w-8 items-center justify-center rounded-md ${
+                      isSelected
+                        ? "bg-primary text-white"
+                        : "bg-gray-100 text-gray-700"
+                    }`}
+                  >
+                    <ModeIcon icon={icon} />
+                  </span>
+                  <span className="block text-sm font-semibold text-gray-900">
+                    {label}
+                  </span>
+                  <span className="mt-1 block text-xs text-gray-500">
+                    {description}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {mode === "timed" && (
+            <div className="rounded-xl border border-primary/15 bg-primary/5 p-3">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-600">
+                Duration
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {TIMED_OPTIONS.map((seconds) => {
+                  const selected = timedDurationSec === seconds;
+                  return (
+                    <button
+                      key={seconds}
+                      onClick={() => onTimedDurationChange(seconds)}
+                      className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+                        selected
+                          ? "bg-primary text-white"
+                          : "bg-white text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      {Math.floor(seconds / 60)} min
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {mode === "lives" && (
+            <div className="rounded-xl border border-primary/15 bg-primary/5 p-3">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-600">
+                Starting Lives
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {LIVES_OPTIONS.map((lives) => {
+                  const selected = livesCount === lives;
+                  return (
+                    <button
+                      key={lives}
+                      onClick={() => onLivesCountChange(lives)}
+                      className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+                        selected
+                          ? "bg-primary text-white"
+                          : "bg-white text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      {lives} lives
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">
@@ -115,7 +296,6 @@ export default function PracticeConfig({
           </div>
         </div>
 
-        {/* Difficulty selection */}
         <div className="space-y-3">
           <h2 className="text-lg font-semibold text-gray-900">Difficulty</h2>
           <div className="grid gap-2 sm:grid-cols-4">
@@ -147,12 +327,11 @@ export default function PracticeConfig({
         </div>
       </div>
 
-      {/* Start button */}
       <button
         onClick={onStart}
         className="mt-8 w-full rounded-xl bg-accent-dark py-3 text-lg font-semibold text-white transition-colors hover:bg-olive"
       >
-        Start Practice
+        {startLabel}
       </button>
     </section>
   );

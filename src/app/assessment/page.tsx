@@ -184,6 +184,7 @@ export default function AssessmentPage() {
           onAnswer={handleAnswer}
           totalAnswered={answered}
           totalCorrect={totalCorrect}
+          streak={0}
         />
       </div>
     );

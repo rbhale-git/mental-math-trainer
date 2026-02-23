@@ -3,10 +3,18 @@
 // ============================================================
 
 // The five math operations users can practice
-export type Operation = "add" | "subtract" | "multiply" | "divide" | "percentage";
+export type Operation =
+  | "add"
+  | "subtract"
+  | "multiply"
+  | "divide"
+  | "percentage";
 
-// Difficulty levels — controls the range of numbers generated
+// Difficulty levels control the range of numbers generated
 export type Difficulty = "easy" | "medium" | "hard" | "expert";
+
+// Practice session modes
+export type PracticeMode = "unlimited" | "timed" | "lives";
 
 // A single math problem
 export interface Problem {
@@ -15,7 +23,7 @@ export interface Problem {
   operand1: number;
   operand2: number;
   correctAnswer: number;
-  // How the problem is displayed to the user (e.g., "25 + 13")
+  // How the problem is displayed to the user (for example, "25 + 13")
   displayText: string;
 }
 
@@ -38,7 +46,7 @@ export interface ProblemRecord {
 export interface Session {
   id: string;
   user_id: string;
-  mode: "unlimited" | "timed";
+  mode: PracticeMode;
   operations: Operation[];
   difficulty: Difficulty;
   total_problems: number;
@@ -82,7 +90,10 @@ export interface AssessmentResult {
 // Local state for the adaptive assessment in progress
 export interface AssessmentState {
   // Per-operation tracking: current difficulty and questions answered
-  operationProgress: Record<Operation, { currentDifficulty: Difficulty; questionsAnswered: number; correctCount: number }>;
+  operationProgress: Record<
+    Operation,
+    { currentDifficulty: Difficulty; questionsAnswered: number; correctCount: number }
+  >;
   // Ordered list of questions to present (interleaved operations)
   questionQueue: Operation[];
   // Current position in the queue
@@ -96,6 +107,9 @@ export interface PracticeState {
   // Config
   selectedOperations: Operation[];
   difficulty: Difficulty;
+  mode: PracticeMode;
+  timedDurationSec: number;
+  livesCount: number;
   // Session tracking
   isActive: boolean;
   currentProblem: Problem | null;
