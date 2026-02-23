@@ -28,10 +28,17 @@ const OPERATION_LABELS: Record<string, string> = {
 
 interface AssessmentResultsProps {
   result: AssessmentResult;
+  isGuestMode?: boolean;
 }
 
-export default function AssessmentResults({ result }: AssessmentResultsProps) {
+export default function AssessmentResults({
+  result,
+  isGuestMode = false,
+}: AssessmentResultsProps) {
   const accuracy = Math.round((result.total_correct / result.total_questions) * 100);
+  const practiceHref = isGuestMode ? "/practice?guest=1" : "/practice";
+  const secondaryHref = isGuestMode ? "/signup" : "/dashboard";
+  const secondaryLabel = isGuestMode ? "Create Account" : "Go to Dashboard";
 
   const levels: { key: string; level: Difficulty }[] = [
     { key: "add", level: result.add_level },
@@ -79,18 +86,23 @@ export default function AssessmentResults({ result }: AssessmentResultsProps) {
       </div>
 
       {/* CTAs */}
+      {isGuestMode && (
+        <p className="text-center text-sm text-gray-500">
+          Create an account to save your assessment history and progress.
+        </p>
+      )}
       <div className="flex flex-col sm:flex-row gap-3">
         <Link
-          href="/practice"
+          href={practiceHref}
           className="flex-1 text-center px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition-colors"
         >
           Start Practicing
         </Link>
         <Link
-          href="/dashboard"
+          href={secondaryHref}
           className="flex-1 text-center px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors"
         >
-          Go to Dashboard
+          {secondaryLabel}
         </Link>
       </div>
     </div>

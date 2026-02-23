@@ -30,19 +30,20 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // Refresh the session — this reads/writes cookies automatically
+  // Refresh the session - this reads/writes cookies automatically
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // If user is NOT logged in and trying to access a protected route,
-  // redirect them to the login page
-  const protectedPaths = ["/dashboard", "/practice", "/assessment"];
-  const isProtected = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  );
+  // /dashboard always requires auth.
+  // /practice and /assessment allow guest access via ?guest=1.
+  const isDashboardRoute = request.nextUrl.pathname.startsWith("/dashboard");
+  const isGuestCapableRoute =
+    request.nextUrl.pathname.startsWith("/practice") ||
+    request.nextUrl.pathname.startsWith("/assessment");
+  const isGuestMode = request.nextUrl.searchParams.get("guest") === "1";
 
-  if (!user && isProtected) {
+  if (!user && (isDashboardRoute || (isGuestCapableRoute && !isGuestMode))) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
