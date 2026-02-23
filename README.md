@@ -1,6 +1,6 @@
 # MentalMath - Mental Math Training App
 
-Practice and improve your mental arithmetic skills with timed problems across 5 operations and 4 difficulty levels.
+Practice and improve your mental arithmetic skills across multiple game modes, 5 operations, and 4 difficulty levels.
 
 ## Tech Stack
 
@@ -29,12 +29,15 @@ npm install
 2. Click **New Project** and give it a name
 3. Wait for the project to finish provisioning
 
-### 3. Run the database migration
+### 3. Run the database migrations
 
 1. In your Supabase dashboard, go to **SQL Editor**
 2. Click **New Query**
-3. Copy the contents of `supabase/migrations/001_initial_schema.sql` and paste it
-4. Click **Run** - this creates the tables, indexes, and security policies
+3. Run each migration file in this order:
+   - `supabase/migrations/001_initial_schema.sql`
+   - `supabase/migrations/002_assessments.sql`
+   - `supabase/migrations/003_add_lives_mode_to_sessions.sql`
+4. Click **Run** after pasting each file
 
 ### 4. Configure environment variables
 
@@ -75,10 +78,12 @@ mental-math/
 |   |   +-- auth/callback/route.ts  # Supabase auth callback
 |   |   +-- dashboard/page.tsx      # Stats dashboard
 |   |   +-- practice/page.tsx       # Practice mode
+|   |   +-- assessment/page.tsx     # Adaptive skill assessment
 |   +-- components/                 # Reusable UI components
 |   +-- hooks/                      # Custom React hooks
 |   +-- lib/
 |       +-- supabase/               # Supabase client helpers
+|       +-- assessment.ts           # Assessment engine
 |       +-- problems.ts             # Problem generation engine
 |       +-- types.ts                # TypeScript type definitions
 ```
@@ -87,9 +92,16 @@ mental-math/
 
 - **5 Operations**: Addition, subtraction, multiplication, division, percentages
 - **4 Difficulty Levels**: Easy, medium, hard, expert
-- **Unlimited Practice**: Solve problems at your own pace
+- **3 Game Modes**:
+  - **Unlimited**: Open-ended practice
+  - **Timed**: Score as many correct answers as possible before time runs out
+  - **Lives**: Session ends when all lives are lost
+- **Adaptive Assessment**: Skill test across all operations with per-operation levels
+- **Guest Mode**: Practice and assessment without creating an account
+- **Streak Tracking**: Live streak and best streak in each session
 - **Real-time Stats**: Track accuracy and speed per operation
-- **Dashboard**: See your overall performance and per-operation breakdown
+- **Dashboard**: See overall performance and per-operation breakdown (signed-in users)
+- **Mobile-Friendly Input**: Numeric keypad support on mobile for faster answering
 
 ## Deployment (Vercel)
 
